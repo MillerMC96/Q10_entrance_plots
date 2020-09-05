@@ -8,6 +8,12 @@ time = list()
 
 fp = open(sys.argv[1])
 
+if len(sys.argv) < 3:
+    save_fig = False
+else:
+    save_fig = True
+    output_fig = sys.argv[2]
+
 #read file
 while fp:
     line = fp.readline()
@@ -32,7 +38,7 @@ plt.scatter(time, dist, s = 2)
 #plt.hlines(6.525666667, time[0], time[-1], colors = 'k', linestyles = '--', label = "crystal structure")
 
 #plotting moving mean
-plt.plot(time[N-1:-N], move_mean[N-1:-N], 'r', label = "moving average over " + str(N) + " ps")
+plt.plot(time[N-1:-N], move_mean[N-1:-N], 'r', label = "moving avg. over " + str(N) + " ps")
 
 #plotting moving std
 dist_upper_bound = list()
@@ -44,10 +50,18 @@ for dist_point, std in zip(move_mean, move_std):
 
 plt.fill_between(time[N-1:-N], dist_upper_bound[N-1:-N], dist_lower_bound[N-1:-N], alpha = 0.4, label = "error band")
 
-plt.ylim(6, 16)
-plt.xlabel("time [ps]")
-plt.ylabel("distance [Å]")
-plt.title("2nd trajectory rms of entrance expansion over time")
-plt.legend(loc = 'best')
-plt.show()
+all_fontsize = 20
 
+plt.xticks(fontsize=all_fontsize)
+plt.yticks(fontsize=all_fontsize)
+plt.ylim(6, 16)
+plt.xlabel("time [ps]", fontsize=all_fontsize)
+plt.ylabel('distance [Å]', fontsize=all_fontsize)
+#plt.title("2nd trajectory relative energy of entrance expansion over time")
+plt.legend(loc = 'best', fontsize=all_fontsize)
+fig = plt.gcf()
+fig.subplots_adjust(bottom=0.15, left=0.15, top=0.95)
+if save_fig:
+    fig.savefig(output_fig + ".jpg", dpi=150)
+else:
+    plt.show()
